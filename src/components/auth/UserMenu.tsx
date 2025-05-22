@@ -1,6 +1,6 @@
 
-import { User } from '@supabase/supabase-js';
 import { useAuth } from '@/contexts/AuthContext';
+import type { User } from '@supabase/supabase-js';
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { User as UserIcon, LogOut } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 interface UserMenuProps {

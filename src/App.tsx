@@ -7,7 +7,7 @@ import { SchoolProvider } from '@/contexts/SchoolContext';
 
 // Components
 import { Toaster } from '@/components/ui/toaster';
-import { DashboardLayout } from '@/components/layout/DashboardLayout';
+import { Layout } from '@/components/layout/Layout';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 
 // Pages
@@ -17,6 +17,7 @@ import { SchoolsPage } from '@/pages/schools/SchoolsPage';
 import { SchoolDetailsPage } from '@/pages/schools/SchoolDetailsPage';
 import { SchoolSettingsPage } from '@/pages/schools/SchoolSettingsPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
+import MasterDashboardPage from '@/pages/MasterDashboardPage';
 
 const queryClient = new QueryClient();
 
@@ -35,7 +36,7 @@ function App() {
                 <Route path="/" element={<Navigate to="/dashboard" replace />} />
                 
                 {/* Protected dashboard routes */}
-                <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
+                <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
                   <Route path="/dashboard" element={<DashboardPage />} />
                   <Route path="/schools" element={<SchoolsPage />} />
                   <Route path="/schools/:id" element={<SchoolDetailsPage />} />
