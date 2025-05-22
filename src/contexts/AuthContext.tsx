@@ -1,29 +1,7 @@
-
 import { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-
-// Types
-interface User {
-  id: string;
-  email: string;
-}
-
-interface Session {
-  access_token: string;
-  refresh_token: string;
-  expires_at: number;
-  user: User;
-}
-
-interface AuthContextType {
-  user: User | null;
-  session: Session | null;
-  isLoading: boolean;
-  isMasterAdmin: boolean;
-  signIn: (email: string, password: string) => Promise<void>;
-  signOut: () => Promise<void>;
-}
+import { User, Session, AuthContextType } from './AuthContext.types';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -37,14 +15,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Set up the auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user || null);
+      (_event, currentSession) => {
+        setSession(currentSession as Session | null);
+        setUser(currentSession?.user as User | null);
         
         // Check master admin status when auth state changes
-        if (session?.user) {
+        if (currentSession?.user) {
           setTimeout(() => {
-            checkMasterAdminStatus(session.user.id);
+            checkMasterAdminStatus(currentSession.user.id);
           }, 0);
         } else {
           setIsMasterAdmin(false);
@@ -53,12 +31,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     );
 
     // Then check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user || null);
+    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+      setSession(currentSession as Session | null);
+      setUser(currentSession?.user as User | null);
       
-      if (session?.user) {
-        checkMasterAdminStatus(session.user.id);
+      if (currentSession?.user) {
+        checkMasterAdminStatus(currentSession.user.id);
       }
       
       setIsLoading(false);

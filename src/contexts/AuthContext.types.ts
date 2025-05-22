@@ -1,7 +1,13 @@
 
-import type { User, Session } from '@supabase/supabase-js';
+import type { User as SupabaseUser, Session as SupabaseSession } from '@supabase/supabase-js';
 
-export type { User, Session };
+export interface User extends SupabaseUser {
+  email: string;
+}
+
+export interface Session extends SupabaseSession {
+  expires_at: number;
+}
 
 export interface AuthContextType {
   user: User | null;

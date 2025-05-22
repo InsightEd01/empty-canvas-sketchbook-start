@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { getSchoolById } from '@/services/masterAdminService';
@@ -11,7 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Building } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
-import type { SchoolFormData } from '@/types/school.types';
+import type { School, SchoolFormData } from '@/types/school.types';
 
 export function SchoolFormPage() {
   const { id } = useParams<{ id: string }>();
@@ -26,20 +26,21 @@ export function SchoolFormPage() {
   
   const { createSchool, updateSchool, isCreating, isUpdating } = useSchoolManagement();
   
-  const { data: school, isLoading } = useQuery({
+  const { data: schoolData, isLoading } = useQuery({
     queryKey: ['school', id],
     queryFn: () => getSchoolById(id!),
     enabled: isEditing,
-    onSuccess: (data) => {
-      if (data) {
-        setFormData({
-          name: data.name,
-          domain: data.domain,
-          active: data.active,
-        });
-      }
-    },
   });
+
+  useEffect(() => {
+    if (schoolData) {
+      setFormData({
+        name: schoolData.name,
+        domain: schoolData.domain,
+        active: schoolData.active,
+      });
+    }
+  }, [schoolData]);
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -56,7 +57,10 @@ export function SchoolFormPage() {
       await updateSchool({ id, updates: formData });
       navigate(`/schools/${id}`);
     } else {
-      const newSchool = await createSchool(formData);
+      const newSchool = await createSchool({
+        ...formData,
+        updated_at: new Date().toISOString()
+      });
       navigate(`/schools/${newSchool.id}`);
     }
   };

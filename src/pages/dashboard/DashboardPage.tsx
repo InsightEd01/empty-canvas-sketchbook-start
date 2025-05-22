@@ -44,7 +44,7 @@ const statCards = [
 ];
 
 export function DashboardPage() {
-  const { data: schools, isLoading } = useQuery({
+  const { data: schools = [], isLoading } = useQuery({
     queryKey: ['schools'],
     queryFn: getSchools,
   });
@@ -93,7 +93,7 @@ export function DashboardPage() {
             ))}
           </div>
           
-          {schools?.length === 0 && (
+          {(schools?.length === 0) && (
             <Card className="bg-muted/30">
               <CardContent className="flex flex-col items-center justify-center p-8 text-center">
                 <School className="h-12 w-12 text-muted-foreground mb-4" />
@@ -108,7 +108,7 @@ export function DashboardPage() {
             </Card>
           )}
           
-          {schools?.length > 0 && (
+          {(schools?.length > 0) && (
             <Card>
               <CardHeader>
                 <CardTitle>Recent Schools</CardTitle>

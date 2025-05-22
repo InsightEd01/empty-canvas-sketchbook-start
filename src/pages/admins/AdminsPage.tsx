@@ -11,7 +11,7 @@ import { getAllAdmins } from '@/services/masterAdminService';
 export function AdminsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   
-  const { data: admins, isLoading } = useQuery({
+  const { data: admins = [], isLoading } = useQuery({
     queryKey: ['admins'],
     queryFn: getAllAdmins,
   });
@@ -19,7 +19,7 @@ export function AdminsPage() {
   const filteredAdmins = admins?.filter((admin: any) => 
     admin.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     admin.school?.name?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  ) || [];
   
   return (
     <div className="space-y-6">

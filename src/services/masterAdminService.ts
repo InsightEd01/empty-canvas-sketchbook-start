@@ -1,4 +1,3 @@
-
 import { supabase } from '@/lib/supabase';
 import type { School } from '@/types/school.types';
 
@@ -240,4 +239,20 @@ export async function getSchoolAdmins(schoolId: string): Promise<SchoolAdmin[]> 
 
   if (error) throw error;
   return data;
+}
+
+export async function getAllAdmins() {
+  const { data, error } = await supabase
+    .from('users')
+    .select(`
+      *,
+      school:schools(name)
+    `)
+    .eq('role', 'admin');
+  
+  if (error) {
+    throw error;
+  }
+  
+  return data || [];
 }

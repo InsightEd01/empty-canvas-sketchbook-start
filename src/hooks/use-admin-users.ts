@@ -1,6 +1,7 @@
+
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { createSchoolAdmin } from '@/services/masterAdminService';
-import { toast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/lib/supabase';
 
 interface AdminUser {
@@ -12,6 +13,7 @@ interface AdminUser {
 
 export function useAdminUsers(schoolId: string) {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   const {
     data: admins,

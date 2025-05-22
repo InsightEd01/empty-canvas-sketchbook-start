@@ -31,7 +31,7 @@ export function MasterAnalytics() {
     totalSchools: schools?.length || 0,
     activeSchools: schools?.filter(s => s.settings?.allowStudentUpload).length || 0,
     newSchoolsThisMonth: Math.floor(Math.random() * 10), // TODO: Replace with actual data
-    totalStudents: schools?.reduce((sum, school) => sum + (school.studentCount || 0), 0) || 0
+    totalStudents: schools?.reduce((sum, school) => sum + (school.studentCount || school.students || 0), 0) || 0
   };
 
   const statCards = [
@@ -67,9 +67,12 @@ export function MasterAnalytics() {
 
   // Sample distribution data
   const schoolSizeDistribution = [
-    { name: 'Small (<500)', value: schools?.filter(s => (s.studentCount || 0) < 500).length || 0 },
-    { name: 'Medium (500-2000)', value: schools?.filter(s => (s.studentCount || 0) >= 500 && (s.studentCount || 0) < 2000).length || 0 },
-    { name: 'Large (>2000)', value: schools?.filter(s => (s.studentCount || 0) >= 2000).length || 0 }
+    { name: 'Small (<500)', value: schools?.filter(s => (s.studentCount || s.students || 0) < 500).length || 0 },
+    { name: 'Medium (500-2000)', value: schools?.filter(s => {
+      const count = s.studentCount || s.students || 0;
+      return count >= 500 && count < 2000;
+    }).length || 0 },
+    { name: 'Large (>2000)', value: schools?.filter(s => (s.studentCount || s.students || 0) >= 2000).length || 0 }
   ];
 
   const COLORS = ['#3B82F6', '#10B981', '#8B5CF6'];

@@ -9,6 +9,10 @@ export interface School {
   admins?: SchoolAdmin[];
   teachers?: SchoolTeacher[];
   students?: number;
+  studentCount?: number;
+  settings?: {
+    allowStudentUpload?: boolean;
+  };
 }
 
 export interface SchoolAdmin {
@@ -28,4 +32,5 @@ export interface SchoolFormData {
   name: string;
   domain: string;
   active?: boolean;
+  updated_at?: string;
 }
