@@ -1,5 +1,5 @@
 
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/contexts/AuthContext';
@@ -7,6 +7,7 @@ import { ThemeProvider } from '@/contexts/ThemeContext';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { SchoolsPage } from '@/pages/schools/SchoolsPage';
 import { DashboardPage } from '@/pages/dashboard/DashboardPage';
+import { LoginPage } from '@/pages/auth/LoginPage';
 import { useAuth } from '@/contexts/AuthContext';
 import { LoadingOverlay } from '@/components/ui/loading';
 
@@ -36,6 +37,7 @@ function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route
+                path="/"
                 element={
                   <ProtectedRoute>
                     <DashboardLayout>
