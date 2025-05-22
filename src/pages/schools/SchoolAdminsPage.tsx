@@ -50,6 +50,7 @@ export function SchoolAdminsPage() {
   const handleAddAdmin = async () => {
     if (!id || !email || !password) return;
 
+    // Pass the password parameter here
     await createAdmin({ email, password, schoolId: id });
     setIsAddDialogOpen(false);
     setEmail('');

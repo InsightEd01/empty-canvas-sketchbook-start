@@ -65,8 +65,8 @@ export function SchoolsPage() {
     mutationFn: (data: FormData) => {
       return createSchool({
         name: data.name,
-        domain: data.domain,
-        address: data.address,
+        domain: data.domain || '',
+        address: data.address || '',
         primaryColor: data.primaryColor,
         secondaryColor: data.secondaryColor,
         maxTeachers: data.maxTeachers,

@@ -1,6 +1,6 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createSchool as apiCreateSchool, updateSchool as apiUpdateSchool } from '@/services/masterAdminService';
+import { createSchool as apiCreateSchool, updateSchool as apiUpdateSchool, createSchoolAdmin } from '@/services/masterAdminService';
 import { useToast } from '@/hooks/use-toast';
 import type { SchoolFormData } from '@/types/school.types';
 import { supabase } from '@/lib/supabase';
@@ -57,28 +57,11 @@ export function useSchoolManagement() {
     },
   });
 
-  // Admin management functions
+  // Admin management functions - updated to include password
   const { mutateAsync: createAdmin, isPending: isCreatingAdmin } = useMutation({
-    mutationFn: async ({ email, schoolId }: { email: string; schoolId: string }) => {
-      // Generate a temporary password or use a default one
-      const tempPassword = "temporaryPassword123"; // In a real app, generate a random password
-      console.log('Creating admin with', { email, schoolId, tempPassword });
-      
-      // Create user in auth system with admin role
-      const { error } = await supabase.auth.signUp({
-        email,
-        password: tempPassword,
-        options: {
-          data: {
-            role: 'admin',
-            school_id: schoolId
-          }
-        }
-      });
-      
-      if (error) throw error;
-      
-      return { id: 'new-admin-id', email, createdAt: new Date().toISOString() };
+    mutationFn: async ({ email, password, schoolId }: { email: string; password: string; schoolId: string }) => {
+      // Now we're passing the password to the API function
+      return await createSchoolAdmin(email, password, schoolId);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admins'] });
@@ -98,8 +81,13 @@ export function useSchoolManagement() {
 
   const { mutateAsync: removeAdmin, isPending: isRemovingAdmin } = useMutation({
     mutationFn: async (adminId: string) => {
-      // This is a mock implementation
-      console.log('Removing admin with ID', adminId);
+      // Update the user to remove school_id association
+      const { error } = await supabase
+        .from('users')
+        .update({ school_id: null })
+        .eq('id', adminId);
+      
+      if (error) throw error;
       return { success: true };
     },
     onSuccess: () => {

@@ -52,48 +52,85 @@ export async function updateSchool(id: string, updates: SchoolFormData): Promise
 }
 
 export async function getSchoolAdmins(schoolId: string): Promise<SchoolAdmin[]> {
-  // This is a mock implementation - replace with actual API call
-  return [
-    { id: '1', email: 'admin1@example.com', createdAt: new Date().toISOString() },
-    { id: '2', email: 'admin2@example.com', createdAt: new Date().toISOString() },
-  ];
+  // This function now uses the schoolId parameter
+  const { data, error } = await supabase
+    .from('users')
+    .select('id, email, created_at')
+    .eq('school_id', schoolId)
+    .eq('role', 'admin');
+  
+  if (error) throw error;
+  
+  return (data || []).map(user => ({
+    id: user.id,
+    email: user.email,
+    createdAt: user.created_at
+  }));
 }
 
 export async function getAllAdmins(): Promise<any[]> {
-  // Mock implementation - replace with actual API call
-  return [
-    { id: '1', email: 'admin1@example.com', name: 'Admin One', schoolId: '1' },
-    { id: '2', email: 'admin2@example.com', name: 'Admin Two', schoolId: '2' },
-  ];
+  const { data, error } = await supabase
+    .from('users')
+    .select('*')
+    .eq('role', 'admin');
+  
+  if (error) throw error;
+  return data || [];
 }
 
 export async function getAllTeachers(): Promise<any[]> {
-  // Mock implementation - replace with actual API call
-  return [
-    { id: '1', email: 'teacher1@example.com', name: 'Teacher One', schoolId: '1' },
-    { id: '2', email: 'teacher2@example.com', name: 'Teacher Two', schoolId: '2' },
-  ];
+  const { data, error } = await supabase
+    .from('users')
+    .select('*')
+    .eq('role', 'teacher');
+  
+  if (error) throw error;
+  return data || [];
 }
 
-// Add the missing function for SchoolAnalytics component
 export async function getSchoolStats(schoolId: string): Promise<any> {
-  // Mock implementation - replace with actual API call
+  // This function now uses the schoolId parameter
+  console.log('Getting stats for school:', schoolId);
+  
+  // Query teachers count
+  const { count: teachersCount } = await supabase
+    .from('users')
+    .select('*', { count: 'exact', head: true })
+    .eq('school_id', schoolId)
+    .eq('role', 'teacher');
+  
+  // Query students count (mock implementation)
+  const studentsCount = 250; // Replace with actual query when students table is available
+  
   return {
-    totalTeachers: 15,
-    totalStudents: 250,
+    totalTeachers: teachersCount || 0,
+    totalStudents: studentsCount,
     totalAssessments: 45,
     activeUsers: 180
   };
 }
 
-// Add the missing function for use-admin-users.ts
+// Updated function signature to match what's used in use-admin-users.ts
 export async function createSchoolAdmin(email: string, password: string, schoolId: string): Promise<any> {
-  // Mock implementation - replace with actual API call
   console.log('Creating school admin with email:', email, 'for school:', schoolId);
+  // The password parameter is now used in the auth signup process
   
   // In a real implementation, you would create the user in auth and set their role to admin
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        role: 'admin',
+        school_id: schoolId
+      }
+    }
+  });
+  
+  if (error) throw error;
+  
   return {
-    id: Math.random().toString(36).substring(7),
+    id: data.user?.id || Math.random().toString(36).substring(7),
     email,
     createdAt: new Date().toISOString()
   };
