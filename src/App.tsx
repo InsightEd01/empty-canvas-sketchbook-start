@@ -17,7 +17,6 @@ import { SchoolsPage } from '@/pages/schools/SchoolsPage';
 import { SchoolDetailsPage } from '@/pages/schools/SchoolDetailsPage';
 import { SchoolSettingsPage } from '@/pages/schools/SchoolSettingsPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
-import MasterDashboardPage from '@/pages/MasterDashboardPage';
 
 const queryClient = new QueryClient();
 
