@@ -386,9 +386,18 @@ export function SchoolsPage() {
               <form onSubmit={(e) => {
                 e.preventDefault();
                 if (selectedSchool) {
-                  updateSchoolMutation.mutate({ ...selectedSchool, ...formData });
+                  updateSchoolMutation.mutate({ 
+                    ...selectedSchool, 
+                    ...formData,
+                    // Ensure domain is always a string
+                    domain: formData.domain || ''
+                  });
                 } else {
-                  createSchoolMutation.mutate(formData);
+                  createSchoolMutation.mutate({ 
+                    ...formData,
+                    // Ensure domain is always a string
+                    domain: formData.domain || ''
+                  });
                 }
               }}>
                 <div className="space-y-4 py-4">

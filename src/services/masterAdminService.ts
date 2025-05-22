@@ -52,7 +52,6 @@ export async function updateSchool(id: string, updates: SchoolFormData): Promise
 }
 
 export async function getSchoolAdmins(schoolId: string): Promise<SchoolAdmin[]> {
-  // This function now uses the schoolId parameter
   const { data, error } = await supabase
     .from('users')
     .select('id, email, created_at')
@@ -89,7 +88,6 @@ export async function getAllTeachers(): Promise<any[]> {
 }
 
 export async function getSchoolStats(schoolId: string): Promise<any> {
-  // This function now uses the schoolId parameter
   console.log('Getting stats for school:', schoolId);
   
   // Query teachers count
@@ -110,19 +108,17 @@ export async function getSchoolStats(schoolId: string): Promise<any> {
   };
 }
 
-// Updated function signature to match what's used in use-admin-users.ts
 export async function createSchoolAdmin(email: string, password: string, schoolId: string): Promise<any> {
   console.log('Creating school admin with email:', email, 'for school:', schoolId);
-  // The password parameter is now used in the auth signup process
   
-  // In a real implementation, you would create the user in auth and set their role to admin
+  // Use the password parameter in the auth signup process
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
       data: {
         role: 'admin',
-        school_id: schoolId
+        school_id: schoolId // Use schoolId parameter
       }
     }
   });
