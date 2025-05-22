@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
+import { SchoolProvider } from '@/contexts/SchoolContext';
 import { Layout } from '@/components/layout/Layout';
 import { SchoolsPage } from '@/pages/schools/SchoolsPage';
 import { SchoolDetailsPage } from '@/pages/schools/SchoolDetailsPage';
@@ -35,24 +36,26 @@ function App() {
       <ThemeProvider defaultTheme="system" storageKey="admin-ui-theme">
         <Router>
           <AuthProvider>
-            <Routes>
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
-              <Route
-                path="/"
-                element={
-                  <ProtectedRoute>
-                    <Layout />
-                  </ProtectedRoute>
-                }
-              >
-                <Route path="/dashboard" element={<DashboardPage />} />
-                <Route path="/schools" element={<SchoolsPage />} />
-                <Route path="/schools/:id" element={<SchoolDetailsPage />} />
-                <Route path="/schools/:id/settings" element={<SchoolSettingsPage />} />
-              </Route>
-            </Routes>
-            <Toaster />
+            <SchoolProvider>
+              <Routes>
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                <Route
+                  path="/"
+                  element={
+                    <ProtectedRoute>
+                      <Layout />
+                    </ProtectedRoute>
+                  }
+                >
+                  <Route path="/dashboard" element={<DashboardPage />} />
+                  <Route path="/schools" element={<SchoolsPage />} />
+                  <Route path="/schools/:id" element={<SchoolDetailsPage />} />
+                  <Route path="/schools/:id/settings" element={<SchoolSettingsPage />} />
+                </Route>
+              </Routes>
+              <Toaster />
+            </SchoolProvider>
           </AuthProvider>
         </Router>
       </ThemeProvider>
