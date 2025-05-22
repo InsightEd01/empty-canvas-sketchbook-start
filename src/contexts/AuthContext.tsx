@@ -1,15 +1,7 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-import type { User, Session } from './AuthContext.types';
-import { supabase } from '@/integrations/supabase/client';
 
-interface AuthContextType {
-  user: User | null;
-  session: Session | null;
-  isLoading: boolean;
-  isMasterAdmin: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
-}
+import { createContext, useContext, useState, useEffect } from 'react';
+import type { User, Session, AuthContextType } from './AuthContext.types';
+import { supabase } from '@/integrations/supabase/client';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -28,10 +20,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setSession(session || null);
 
       if (session?.user) {
-        const { data, error } = await supabase
-          .from('master_admins')
+        // Check if user exists in users table with master_admin role
+        const { data } = await supabase
+          .from('users')
           .select('*')
-          .eq('user_id', session.user.id)
+          .eq('id', session.user.id)
+          .eq('role', 'master_admin')
           .single();
 
         setIsMasterAdmin(!!data);
@@ -43,14 +37,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     loadSession();
 
-    supabase.auth.onAuthStateChange((event, session) => {
+    supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user || null);
       setSession(session || null);
       setIsLoading(false);
     });
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const signIn = async (email: string, password: string) => {
     setIsLoading(true);
     const { data, error } = await supabase.auth.signInWithPassword({
       email: email,
@@ -66,17 +60,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setUser(data.user);
     setSession(data.session);
 
-    const { data: adminData, error: adminError } = await supabase
-      .from('master_admins')
+    // Check if user exists in users table with master_admin role
+    const { data: adminData } = await supabase
+      .from('users')
       .select('*')
-      .eq('user_id', data.user?.id)
+      .eq('id', data.user?.id)
+      .eq('role', 'master_admin')
       .single();
 
     setIsMasterAdmin(!!adminData);
     setIsLoading(false);
   };
 
-  const logout = async () => {
+  const signOut = async () => {
     setIsLoading(true);
     const { error } = await supabase.auth.signOut();
     if (error) {
@@ -93,8 +89,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     session,
     isLoading,
     isMasterAdmin,
-    login,
-    logout,
+    signIn,
+    signOut,
   };
 
   return (

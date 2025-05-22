@@ -8,6 +8,6 @@ export interface AuthContextType {
   session: Session | null;
   isLoading: boolean;
   isMasterAdmin: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
+  signIn: (email: string, password: string) => Promise<void>;
+  signOut: () => Promise<void>;
 }

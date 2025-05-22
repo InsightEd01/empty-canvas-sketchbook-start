@@ -51,16 +51,41 @@ export function SchoolSettingsPage() {
         allowTeacherRegistration: false,
         allowStudentUpload: false
       }
-    },
-    values: school
+    }
   });
+
+  // Update form with school data when it's available
+  if (school && !form.formState.isDirty) {
+    const defaultValues = {
+      name: school.name || '',
+      domain: school.domain || '',
+      theme: {
+        primary: school.theme?.primary || school.primaryColor || '#000000',
+        secondary: school.theme?.secondary || school.secondaryColor || '#ffffff'
+      },
+      settings: {
+        allowTeacherRegistration: school.settings?.allowTeacherRegistration || false,
+        allowStudentUpload: school.settings?.allowStudentUpload || false
+      }
+    };
+    form.reset(defaultValues);
+  }
 
   if (isLoading || !school) {
     return <LoadingSpinner size="lg" />;
   }
 
   const onSubmit = async (data: SettingsFormValues) => {
-    updateSchool({ id: school.id, updates: data });
+    if (id) {
+      updateSchool({ 
+        id: id, 
+        updates: {
+          ...data,
+          primaryColor: data.theme.primary,
+          secondaryColor: data.theme.secondary
+        }
+      });
+    }
   };
 
   return (

@@ -1,6 +1,8 @@
+
 export interface School {
   id: string;
   name: string;
+  domain?: string;
   address?: string;
   maxTeachers?: number;
   maxStudents?: number;
@@ -13,11 +15,20 @@ export interface School {
   created_at: string;
   created_by: string;
   updated_at?: string;
+  theme?: {
+    primary: string;
+    secondary: string;
+  };
+  settings?: {
+    allowTeacherRegistration: boolean;
+    allowStudentUpload: boolean;
+  };
 }
 
 export interface CreateSchoolRequest {
   name: string;
   address: string;
+  domain?: string;
   maxTeachers?: number;
   maxStudents?: number;
   primaryColor?: string;
