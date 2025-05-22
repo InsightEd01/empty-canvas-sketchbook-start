@@ -50,7 +50,8 @@ export function Sidebar({ collapsed = false }: SidebarProps) {
       <div className="flex-1 overflow-auto py-2">
         <nav className="px-2 space-y-1">
           {menuItems.map((item) => {
-            const isActive = location.pathname === item.href;
+            const isActive = location.pathname === item.href || 
+                             location.pathname.startsWith(`${item.href}/`);
             
             return (
               <Link

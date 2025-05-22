@@ -2,47 +2,30 @@
 export interface School {
   id: string;
   name: string;
-  domain?: string;
-  address?: string;
-  maxTeachers?: number;
-  maxStudents?: number;
-  primaryColor?: string;
-  secondaryColor?: string;
-  studentCount?: number;
-  teacherCount?: number;
-  storageUsed?: string;
-  status?: 'active' | 'inactive';
+  domain: string;
+  active: boolean;
   created_at: string;
-  created_by: string;
-  updated_at?: string;
-  theme?: {
-    primary: string;
-    secondary: string;
-  };
-  settings?: {
-    allowTeacherRegistration: boolean;
-    allowStudentUpload: boolean;
-  };
+  updated_at: string;
+  admins?: SchoolAdmin[];
+  teachers?: SchoolTeacher[];
+  students?: number;
 }
 
-export interface CreateSchoolRequest {
-  name: string;
-  address: string;
-  domain?: string;
-  maxTeachers?: number;
-  maxStudents?: number;
-  primaryColor?: string;
-  secondaryColor?: string;
-}
-
-export interface UpdateSchoolRequest extends CreateSchoolRequest {
+export interface SchoolAdmin {
   id: string;
-  theme?: {
-    primary: string;
-    secondary: string;
-  };
-  settings?: {
-    allowTeacherRegistration: boolean;
-    allowStudentUpload: boolean;
-  };
+  email: string;
+  created_at: string;
+}
+
+export interface SchoolTeacher {
+  id: string;
+  email: string;
+  name: string;
+  created_at: string;
+}
+
+export interface SchoolFormData {
+  name: string;
+  domain: string;
+  active?: boolean;
 }

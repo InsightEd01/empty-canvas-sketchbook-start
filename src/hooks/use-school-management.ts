@@ -1,15 +1,19 @@
 
+import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@/hooks/use-toast';
 import { createSchool, updateSchool, deleteSchool, createSchoolAdmin, removeSchoolAdmin } from '@/services/masterAdminService';
-import type { School } from '@/types/school.types';
+import type { School, SchoolFormData } from '@/types/school.types';
 
 export function useSchoolManagement() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
   const createSchoolMutation = useMutation({
-    mutationFn: createSchool,
+    mutationFn: async (formData: SchoolFormData): Promise<School> => {
+      const result = await createSchool(formData);
+      return result;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['schools'] });
       toast({
@@ -23,14 +27,16 @@ export function useSchoolManagement() {
         description: `Failed to create school: ${error.message}`,
         variant: 'destructive',
       });
+      throw error;
     },
   });
 
   const updateSchoolMutation = useMutation({
-    mutationFn: ({ id, updates }: { id: string; updates: Partial<School> }) =>
+    mutationFn: ({ id, updates }: { id: string; updates: Partial<SchoolFormData> }) =>
       updateSchool(id, updates),
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['schools'] });
+      queryClient.invalidateQueries({ queryKey: ['school', variables.id] });
       toast({
         title: 'School updated',
         description: 'The school has been successfully updated.',
@@ -66,8 +72,9 @@ export function useSchoolManagement() {
   const createAdminMutation = useMutation({
     mutationFn: ({ email, password, schoolId }: { email: string; password: string; schoolId: string }) =>
       createSchoolAdmin(email, password, schoolId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admins'] });
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['admins', variables.schoolId] });
+      queryClient.invalidateQueries({ queryKey: ['school', variables.schoolId] });
       toast({
         title: 'Admin created',
         description: 'The school admin has been successfully created.',

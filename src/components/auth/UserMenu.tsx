@@ -1,6 +1,5 @@
 
 import { useAuth } from '@/contexts/AuthContext';
-import type { User } from '@supabase/supabase-js';
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -13,12 +12,10 @@ import { Button } from '@/components/ui/button';
 import { LogOut } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
-interface UserMenuProps {
-  user: User;
-}
-
-export function UserMenu({ user }: UserMenuProps) {
-  const { signOut } = useAuth();
+export function UserMenu() {
+  const { user, signOut } = useAuth();
+  
+  if (!user) return null;
   
   const initials = user.email 
     ? user.email.substring(0, 2).toUpperCase()

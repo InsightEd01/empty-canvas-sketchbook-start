@@ -34,11 +34,7 @@ export function LoginPage() {
       await signIn(email, password);
       navigate('/dashboard');
     } catch (error) {
-      toast({
-        title: 'Authentication Error',
-        description: error instanceof Error ? error.message : 'Failed to sign in',
-        variant: 'destructive',
-      });
+      // Error is already handled in the AuthContext
     } finally {
       setIsLoading(false);
     }
@@ -47,7 +43,7 @@ export function LoginPage() {
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800 p-4">
+    <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-primary">Master Admin Portal</h1>

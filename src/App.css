@@ -16,9 +16,14 @@ body {
   flex-direction: column;
 }
 
-/* Card and surface styles */
+/* Card animations */
 .card {
-  @apply rounded-lg border bg-card text-card-foreground shadow-sm;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 /* Layout styles */
@@ -26,6 +31,51 @@ body {
   @apply flex flex-col md:flex-row min-h-screen;
 }
 
-.main-content {
-  @apply flex-1 p-6;
+/* Form animations */
+.form-input:focus {
+  @apply ring-2 ring-primary/50 transition-all;
+  transform: scale(1.01);
+}
+
+/* Page transitions */
+.page-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+.page-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+.page-exit-active {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .dashboard-card-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Dark mode enhancements */
+.dark .card {
+  background: rgba(30, 41, 59, 0.5);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dark .fancy-border {
+  border-image: linear-gradient(to right, rgba(56, 189, 248, 0.2), rgba(59, 130, 246, 0.2)) 1;
 }
