@@ -1,12 +1,11 @@
+
 import { useState } from 'react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Slider } from '@/components/ui/slider';
-import { Building2, Shield, Gauge } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export const MasterSettingsPage = () => {
@@ -29,12 +28,6 @@ export const MasterSettingsPage = () => {
       title: 'Firewall Settings Updated',
       description: `Firewall is now ${isFirewallEnabled ? 'disabled' : 'enabled'}.`,
     });
-  };
-
-  // Example of using the Slider component
-  const handleSliderChange = (value: number[]) => {
-    console.log('Slider value changed:', value);
-    // Update relevant state here
   };
 
   return (
