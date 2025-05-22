@@ -1,20 +1,38 @@
+
+import { useState } from 'react';
+import { Outlet } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
-import { Header } from './Header';
+import { TopNavbar } from './TopNavbar';
+import { cn } from '@/lib/utils';
 
-interface DashboardLayoutProps {
-  children: React.ReactNode;
-}
-
-export function DashboardLayout({ children }: DashboardLayoutProps) {
+export function DashboardLayout() {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  
   return (
-    <div className="flex min-h-screen">
-      <div className="hidden md:flex md:w-64 md:flex-col">
-        <Sidebar />
-      </div>
-      <div className="flex flex-1 flex-col">
-        <Header />
-        <main className="flex-1 p-6">
-          {children}
+    <div className="min-h-screen flex flex-col">
+      <TopNavbar onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
+      
+      <div className="flex flex-1 overflow-hidden">
+        {/* Sidebar */}
+        <div 
+          className={cn(
+            "h-[calc(100vh-4rem)] fixed left-0 top-16 z-20 transition-all duration-300 bg-background border-r", 
+            sidebarOpen ? "translate-x-0 w-64" : "-translate-x-full md:translate-x-0 md:w-16"
+          )}
+        >
+          <Sidebar collapsed={!sidebarOpen} />
+        </div>
+        
+        {/* Main Content */}
+        <main 
+          className={cn(
+            "flex-1 overflow-auto transition-all duration-300 pt-16",
+            sidebarOpen ? "ml-0 md:ml-64" : "ml-0 md:ml-16"
+          )}
+        >
+          <div className="container p-4 md:p-6 mx-auto">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

@@ -1,5 +1,5 @@
 
-/* Reset some basic elements */
+/* Base styles */
 html,
 body {
   margin: 0;
@@ -8,7 +8,7 @@ body {
   width: 100%;
 }
 
-/* Allow Tailwind to control most styling */
+/* Root container */
 #root {
   min-height: 100vh;
   width: 100%;
@@ -16,12 +16,16 @@ body {
   flex-direction: column;
 }
 
-/* Override any conflicting styles */
-.min-h-screen {
-  min-height: 100vh;
+/* Card and surface styles */
+.card {
+  @apply rounded-lg border bg-card text-card-foreground shadow-sm;
 }
 
-/* Ensure card styling is prominent */
-.card {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+/* Layout styles */
+.dashboard-layout {
+  @apply flex flex-col md:flex-row min-h-screen;
+}
+
+.main-content {
+  @apply flex-1 p-6;
 }

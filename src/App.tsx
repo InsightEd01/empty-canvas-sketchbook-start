@@ -1,36 +1,24 @@
 
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Toaster } from '@/components/ui/toaster';
-import { AuthProvider } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
+import { AuthProvider } from '@/contexts/AuthContext';
 import { SchoolProvider } from '@/contexts/SchoolContext';
-import { Layout } from '@/components/layout/Layout';
+
+// Components
+import { Toaster } from '@/components/ui/toaster';
+import { DashboardLayout } from '@/components/layout/DashboardLayout';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+
+// Pages
+import { LoginPage } from '@/pages/auth/LoginPage';
+import { DashboardPage } from '@/pages/dashboard/DashboardPage';
 import { SchoolsPage } from '@/pages/schools/SchoolsPage';
 import { SchoolDetailsPage } from '@/pages/schools/SchoolDetailsPage';
 import { SchoolSettingsPage } from '@/pages/schools/SchoolSettingsPage';
-import { DashboardPage } from '@/pages/dashboard/DashboardPage';
-import { LoginPage } from '@/pages/auth/LoginPage';
-import { useAuth } from '@/contexts/AuthContext';
-import { LoadingOverlay } from '@/components/ui/loading';
-
-import './App.css';
+import { NotFoundPage } from '@/pages/NotFoundPage';
 
 const queryClient = new QueryClient();
-
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user, isLoading, isMasterAdmin } = useAuth();
-
-  if (isLoading) {
-    return <LoadingOverlay />;
-  }
-
-  if (!user || !isMasterAdmin) {
-    return <Navigate to="/login" />;
-  }
-
-  return <>{children}</>;
-}
 
 function App() {
   return (
@@ -40,22 +28,24 @@ function App() {
           <AuthProvider>
             <SchoolProvider>
               <Routes>
+                {/* Auth routes */}
                 <Route path="/login" element={<LoginPage />} />
+                
+                {/* Home redirect */}
                 <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                <Route
-                  path="/"
-                  element={
-                    <ProtectedRoute>
-                      <Layout />
-                    </ProtectedRoute>
-                  }
-                >
+                
+                {/* Protected dashboard routes */}
+                <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
                   <Route path="/dashboard" element={<DashboardPage />} />
                   <Route path="/schools" element={<SchoolsPage />} />
                   <Route path="/schools/:id" element={<SchoolDetailsPage />} />
                   <Route path="/schools/:id/settings" element={<SchoolSettingsPage />} />
                 </Route>
+                
+                {/* 404 Page */}
+                <Route path="*" element={<NotFoundPage />} />
               </Routes>
+              
               <Toaster />
             </SchoolProvider>
           </AuthProvider>
