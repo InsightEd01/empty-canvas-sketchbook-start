@@ -80,10 +80,9 @@ export function SchoolSettingsPage() {
       updateSchool({ 
         id: id, 
         updates: {
-          name: data.name,
-          domain: data.domain,
-          theme: data.theme,
-          settings: data.settings
+          ...data,
+          primaryColor: data.theme.primary,
+          secondaryColor: data.theme.secondary
         }
       });
     }
