@@ -1,6 +1,6 @@
 
 import { supabase } from '@/lib/supabase';
-import type { School, CreateSchoolRequest, UpdateSchoolRequest } from '@/types/school.types';
+import type { School, SchoolFormData } from '@/types/school.types';
 
 export async function getSchools(): Promise<School[]> {
   const { data, error } = await supabase
@@ -16,7 +16,7 @@ export async function getSchools(): Promise<School[]> {
   return data;
 }
 
-export async function createSchool(school: CreateSchoolRequest): Promise<School> {
+export async function createSchool(school: SchoolFormData): Promise<School> {
   const { data, error } = await supabase
     .from('schools')
     .insert(school)
@@ -31,7 +31,7 @@ export async function createSchool(school: CreateSchoolRequest): Promise<School>
   return data;
 }
 
-export async function updateSchool(id: string, school: UpdateSchoolRequest): Promise<School> {
+export async function updateSchool(id: string, school: SchoolFormData): Promise<School> {
   const { data, error } = await supabase
     .from('schools')
     .update(school)

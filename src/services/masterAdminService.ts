@@ -1,42 +1,20 @@
-import { supabase } from '@/lib/supabase';
-import type { School } from '@/types/school.types';
 
-export interface SchoolAdmin {
+import { supabase } from '@/lib/supabase';
+import type { School, SchoolFormData } from '@/types/school.types';
+
+export type SchoolAdmin = {
   id: string;
   email: string;
-  name?: string;
-  schoolId: string;
-  role: 'admin';
   createdAt: string;
-}
-
-export interface SchoolStats {
-  totalAdmins: number;
-  totalTeachers: number;
-  totalStudents: number;
-  totalAssessments: number;
-  activeUsers: number;
-}
+};
 
 export async function getSchools(): Promise<School[]> {
-  const { data: schools, error } = await supabase
+  const { data, error } = await supabase
     .from('schools')
     .select('*');
-
+  
   if (error) throw error;
-
-  // Get total students for each school
-  const schoolsWithStats = await Promise.all(
-    schools.map(async (school) => {
-      const stats = await getSchoolStats(school.id);
-      return {
-        ...school,
-        studentCount: stats.totalStudents
-      };
-    })
-  );
-
-  return schoolsWithStats;
+  return data || [];
 }
 
 export async function getSchoolById(id: string): Promise<School> {
@@ -45,214 +23,54 @@ export async function getSchoolById(id: string): Promise<School> {
     .select('*')
     .eq('id', id)
     .single();
-
+  
   if (error) throw error;
   return data;
 }
 
-export async function createSchool(school: Omit<School, 'id' | 'created_at' | 'created_by'>): Promise<School> {
+export async function createSchool(school: SchoolFormData): Promise<School> {
   const { data, error } = await supabase
     .from('schools')
-    .insert([school])
+    .insert(school)
     .select()
     .single();
-
+  
   if (error) throw error;
   return data;
 }
 
-export async function updateSchool(id: string, updates: Partial<School>): Promise<School> {
+export async function updateSchool(id: string, updates: SchoolFormData): Promise<School> {
   const { data, error } = await supabase
     .from('schools')
     .update(updates)
     .eq('id', id)
     .select()
     .single();
-
+  
   if (error) throw error;
   return data;
-}
-
-export async function getSchoolStats(schoolId: string): Promise<SchoolStats> {
-  // Get total admins for the school
-  const { data: admins, error: adminError } = await supabase
-    .from('users')
-    .select('id')
-    .eq('school_id', schoolId)
-    .eq('role', 'admin');
-
-  if (adminError) throw adminError;
-
-  // Get total teachers for the school
-  const { data: teachers, error: teacherError } = await supabase
-    .from('teachers')
-    .select('id')
-    .eq('school_id', schoolId);
-
-  if (teacherError) throw teacherError;
-
-  // Get total students for the school
-  const { data: students, error: studentError } = await supabase
-    .from('students')
-    .select('id')
-    .eq('school_id', schoolId);
-
-  if (studentError) throw studentError;
-
-  // Get total assessments for the school
-  const { data: assessments, error: assessmentError } = await supabase
-    .from('assessments')
-    .select('id')
-    .eq('school_id', schoolId);
-
-  if (assessmentError) throw assessmentError;
-
-  // Get active users (users who have logged in within the last 30 days)
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-
-  const { data: activeUsers, error: activeUsersError } = await supabase
-    .from('users')
-    .select('id')
-    .eq('school_id', schoolId)
-    .gte('last_login', thirtyDaysAgo.toISOString());
-
-  if (activeUsersError) throw activeUsersError;
-
-  return {
-    totalAdmins: admins?.length || 0,
-    totalTeachers: teachers?.length || 0,
-    totalStudents: students?.length || 0,
-    totalAssessments: assessments?.length || 0,
-    activeUsers: activeUsers?.length || 0,
-  };
-}
-
-export async function getSystemStats(): Promise<{
-  totalSchools: number;
-  totalAdmins: number;
-  totalTeachers: number;
-  totalStudents: number;
-}> {
-  // Get total schools
-  const { data: schools, error: schoolError } = await supabase
-    .from('schools')
-    .select('id');
-
-  if (schoolError) throw schoolError;
-
-  // Get total admins
-  const { data: admins, error: adminError } = await supabase
-    .from('users')
-    .select('id')
-    .eq('role', 'admin');
-
-  if (adminError) throw adminError;
-
-  // Get total teachers
-  const { data: teachers, error: teacherError } = await supabase
-    .from('teachers')
-    .select('id');
-
-  if (teacherError) throw teacherError;
-
-  // Get total students
-  const { data: students, error: studentError } = await supabase
-    .from('students')
-    .select('id');
-
-  if (studentError) throw studentError;
-
-  return {
-    totalSchools: schools?.length || 0,
-    totalAdmins: admins?.length || 0,
-    totalTeachers: teachers?.length || 0,
-    totalStudents: students?.length || 0,
-  };
-}
-
-export async function createSchoolAdmin(
-  email: string,
-  password: string,
-  schoolId: string
-): Promise<void> {
-  // Create the user account with admin role
-  const { data: authData, error: authError } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: {
-        role: 'admin',
-      },
-    },
-  });
-
-  if (authError) throw authError;
-
-  if (!authData.user) {
-    throw new Error('Failed to create admin user');
-  }
-
-  // Add the user to the users table with school_id
-  const { error: userError } = await supabase
-    .from('users')
-    .insert({
-      id: authData.user.id,
-      email: email,
-      role: 'admin',
-      school_id: schoolId,
-    });
-
-  if (userError) {
-    // Cleanup: Delete the auth user if user record creation fails
-    await supabase.auth.admin.deleteUser(authData.user.id);
-    throw userError;
-  }
-}
-
-export async function removeSchoolAdmin(adminId: string): Promise<void> {
-  const { error } = await supabase
-    .from('users')
-    .delete()
-    .eq('id', adminId)
-    .eq('role', 'admin');
-
-  if (error) throw error;
-}
-
-// Keep only this version of deleteSchool (adjust as needed for your app logic)
-export async function deleteSchool(id: string): Promise<void> {
-  const { error } = await supabase
-    .from('schools')
-    .delete()
-    .eq('id', id);
-
-  if (error) throw error;
 }
 
 export async function getSchoolAdmins(schoolId: string): Promise<SchoolAdmin[]> {
-  const { data, error } = await supabase
-    .from('users')
-    .select('*')
-    .eq('school_id', schoolId)
-    .eq('role', 'admin');
-
-  if (error) throw error;
-  return data;
+  // This is a mock implementation - replace with actual API call
+  return [
+    { id: '1', email: 'admin1@example.com', createdAt: new Date().toISOString() },
+    { id: '2', email: 'admin2@example.com', createdAt: new Date().toISOString() },
+  ];
 }
 
-export async function getAllAdmins() {
-  const { data, error } = await supabase
-    .from('users')
-    .select(`
-      *,
-      school:schools(name)
-    `)
-    .eq('role', 'admin');
-  
-  if (error) {
-    throw error;
-  }
-  
-  return data || [];
+export async function getAllAdmins(): Promise<any[]> {
+  // Mock implementation - replace with actual API call
+  return [
+    { id: '1', email: 'admin1@example.com', name: 'Admin One', schoolId: '1' },
+    { id: '2', email: 'admin2@example.com', name: 'Admin Two', schoolId: '2' },
+  ];
+}
+
+export async function getAllTeachers(): Promise<any[]> {
+  // Mock implementation - replace with actual API call
+  return [
+    { id: '1', email: 'teacher1@example.com', name: 'Teacher One', schoolId: '1' },
+    { id: '2', email: 'teacher2@example.com', name: 'Teacher Two', schoolId: '2' },
+  ];
 }

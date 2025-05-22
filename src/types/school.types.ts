@@ -10,8 +10,20 @@ export interface School {
   teachers?: SchoolTeacher[];
   students?: number;
   studentCount?: number;
+  teacherCount?: number;
+  address?: string;
+  primaryColor?: string;
+  secondaryColor?: string;
+  storageUsed?: string;
+  maxTeachers?: number;
+  maxStudents?: number;
+  theme?: {
+    primary: string;
+    secondary: string;
+  };
   settings?: {
     allowStudentUpload?: boolean;
+    allowTeacherRegistration?: boolean;
   };
 }
 
@@ -32,5 +44,21 @@ export interface SchoolFormData {
   name: string;
   domain: string;
   active?: boolean;
+  address?: string;
+  primaryColor?: string;
+  secondaryColor?: string;
+  maxTeachers?: number;
+  maxStudents?: number;
   updated_at?: string;
+  theme?: {
+    primary: string;
+    secondary: string;
+  };
+  settings?: {
+    allowStudentUpload?: boolean;
+    allowTeacherRegistration?: boolean;
+  };
 }
+
+export interface CreateSchoolRequest extends SchoolFormData {}
+export interface UpdateSchoolRequest extends SchoolFormData {}

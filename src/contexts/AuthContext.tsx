@@ -1,7 +1,8 @@
+
 import { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { User, Session, AuthContextType } from './AuthContext.types';
+import type { User, Session, AuthContextType } from './AuthContext.types';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -16,8 +17,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Set up the auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, currentSession) => {
-        setSession(currentSession as Session | null);
-        setUser(currentSession?.user as User | null);
+        setSession(currentSession as unknown as Session);
+        setUser(currentSession?.user as unknown as User);
         
         // Check master admin status when auth state changes
         if (currentSession?.user) {
@@ -32,8 +33,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // Then check for existing session
     supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
-      setSession(currentSession as Session | null);
-      setUser(currentSession?.user as User | null);
+      setSession(currentSession as unknown as Session);
+      setUser(currentSession?.user as unknown as User);
       
       if (currentSession?.user) {
         checkMasterAdminStatus(currentSession.user.id);
