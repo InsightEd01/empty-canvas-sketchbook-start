@@ -1,3 +1,4 @@
+
 import { useQuery } from '@tanstack/react-query';
 import { getSchools } from '@/services/masterAdminService';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
@@ -8,7 +9,7 @@ import { Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { MasterAnalytics } from '@/components/analytics/MasterAnalytics';
 import { SchoolAnalytics } from '@/components/analytics/SchoolAnalytics';
-import { Loading } from '@/components/ui/loading';
+import { LoadingSpinner } from '@/components/ui/loading';
 
 const MasterDashboardPage = () => {
   const { data: schools, isLoading } = useQuery({
@@ -20,7 +21,7 @@ const MasterDashboardPage = () => {
     return (
       <DashboardLayout>
         <div className="flex items-center justify-center h-[60vh]">
-          <Loading text="Loading schools data..." />
+          <LoadingSpinner text="Loading schools data..." size="lg" />
         </div>
       </DashboardLayout>
     );
