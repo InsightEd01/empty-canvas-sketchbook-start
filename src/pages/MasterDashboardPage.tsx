@@ -1,4 +1,3 @@
-
 import { useQuery } from '@tanstack/react-query';
 import { getSchools } from '@/services/masterAdminService';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
@@ -21,7 +20,7 @@ const MasterDashboardPage = () => {
     return (
       <DashboardLayout>
         <div className="flex items-center justify-center h-[60vh]">
-          <LoadingSpinner text="Loading schools data..." size="lg" />
+          <LoadingSpinner size="lg" />
         </div>
       </DashboardLayout>
     );
