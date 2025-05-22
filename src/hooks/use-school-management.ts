@@ -1,7 +1,8 @@
+
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@/hooks/use-toast';
-import type { School } from '@/services/masterAdminService';
 import { createSchool, updateSchool, deleteSchool, createSchoolAdmin, removeSchoolAdmin } from '@/services/masterAdminService';
+import type { School } from '@/types/school.types';
 
 export function useSchoolManagement() {
   const queryClient = useQueryClient();
