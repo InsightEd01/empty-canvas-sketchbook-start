@@ -4,7 +4,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { useQuery } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { School } from '@/services/masterAdminService';
+import type { School } from '@/types/school.types';
 import { getSchoolStats } from '@/services/masterAdminService';
 import { Building2, GraduationCap, School as SchoolIcon, Users } from 'lucide-react';
 

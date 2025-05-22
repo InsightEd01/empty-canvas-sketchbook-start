@@ -1,3 +1,4 @@
+
 import { supabase } from '@/lib/supabase';
 import type { School } from '@/types/school.types';
 
@@ -31,7 +32,7 @@ export async function getSchools(): Promise<School[]> {
       const stats = await getSchoolStats(school.id);
       return {
         ...school,
-        totalStudents: stats.totalStudents
+        studentCount: stats.totalStudents
       };
     })
   );
