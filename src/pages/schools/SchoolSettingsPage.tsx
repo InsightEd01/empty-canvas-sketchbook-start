@@ -1,4 +1,3 @@
-
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { getSchoolById } from '@/services/masterAdminService';
@@ -13,6 +12,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { ColorPicker } from '@/components/ui/color-picker';
+import { School } from '@/types/school.types';
 
 const settingsFormSchema = z.object({
   name: z.string().min(2, "School name must be at least 2 characters"),
@@ -80,9 +80,18 @@ export function SchoolSettingsPage() {
       updateSchool({ 
         id: id, 
         updates: {
-          ...data,
+          name: data.name,
+          domain: data.domain,
           primaryColor: data.theme.primary,
-          secondaryColor: data.theme.secondary
+          secondaryColor: data.theme.secondary,
+          theme: {
+            primary: data.theme.primary,
+            secondary: data.theme.secondary
+          },
+          settings: {
+            allowTeacherRegistration: data.settings.allowTeacherRegistration,
+            allowStudentUpload: data.settings.allowStudentUpload
+          }
         }
       });
     }

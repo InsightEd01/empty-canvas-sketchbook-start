@@ -37,4 +37,12 @@ export interface CreateSchoolRequest {
 
 export interface UpdateSchoolRequest extends CreateSchoolRequest {
   id: string;
+  theme?: {
+    primary: string;
+    secondary: string;
+  };
+  settings?: {
+    allowTeacherRegistration: boolean;
+    allowStudentUpload: boolean;
+  };
 }

@@ -4,8 +4,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
-import { DashboardLayout } from '@/components/layout/DashboardLayout';
+import { Layout } from '@/components/layout/Layout';
 import { SchoolsPage } from '@/pages/schools/SchoolsPage';
+import { SchoolDetailsPage } from '@/pages/schools/SchoolDetailsPage';
+import { SchoolSettingsPage } from '@/pages/schools/SchoolSettingsPage';
 import { DashboardPage } from '@/pages/dashboard/DashboardPage';
 import { LoginPage } from '@/pages/auth/LoginPage';
 import { useAuth } from '@/contexts/AuthContext';
@@ -40,14 +42,14 @@ function App() {
                 path="/"
                 element={
                   <ProtectedRoute>
-                    <DashboardLayout>
-                      <Outlet />
-                    </DashboardLayout>
+                    <Layout />
                   </ProtectedRoute>
                 }
               >
                 <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/schools" element={<SchoolsPage />} />
+                <Route path="/schools/:id" element={<SchoolDetailsPage />} />
+                <Route path="/schools/:id/settings" element={<SchoolSettingsPage />} />
               </Route>
             </Routes>
             <Toaster />
