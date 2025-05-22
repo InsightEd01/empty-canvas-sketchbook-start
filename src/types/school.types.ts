@@ -35,8 +35,8 @@ export interface SchoolAdmin {
 
 export interface SchoolTeacher {
   id: string;
-  email: string;
   name: string;
+  email: string;
   created_at: string;
 }
 

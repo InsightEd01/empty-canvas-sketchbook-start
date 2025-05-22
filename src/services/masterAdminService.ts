@@ -74,3 +74,27 @@ export async function getAllTeachers(): Promise<any[]> {
     { id: '2', email: 'teacher2@example.com', name: 'Teacher Two', schoolId: '2' },
   ];
 }
+
+// Add the missing function for SchoolAnalytics component
+export async function getSchoolStats(schoolId: string): Promise<any> {
+  // Mock implementation - replace with actual API call
+  return {
+    totalTeachers: 15,
+    totalStudents: 250,
+    totalAssessments: 45,
+    activeUsers: 180
+  };
+}
+
+// Add the missing function for use-admin-users.ts
+export async function createSchoolAdmin(email: string, password: string, schoolId: string): Promise<any> {
+  // Mock implementation - replace with actual API call
+  console.log('Creating school admin with email:', email, 'for school:', schoolId);
+  
+  // In a real implementation, you would create the user in auth and set their role to admin
+  return {
+    id: Math.random().toString(36).substring(7),
+    email,
+    createdAt: new Date().toISOString()
+  };
+}

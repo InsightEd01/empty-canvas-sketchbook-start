@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createSchool as apiCreateSchool, updateSchool as apiUpdateSchool } from '@/services/masterAdminService';
 import { useToast } from '@/hooks/use-toast';
 import type { SchoolFormData } from '@/types/school.types';
+import { supabase } from '@/lib/supabase';
 
 export function useSchoolManagement() {
   const queryClient = useQueryClient();
@@ -56,12 +57,28 @@ export function useSchoolManagement() {
     },
   });
 
-  // Mock implementations for admin functions
+  // Admin management functions
   const { mutateAsync: createAdmin, isPending: isCreatingAdmin } = useMutation({
-    mutationFn: async ({ email, password, schoolId }: { email: string; password: string; schoolId: string }) => {
-      // This is a mock implementation
-      console.log('Creating admin with', { email, schoolId });
-      return { id: 'mock-id', email, createdAt: new Date().toISOString() };
+    mutationFn: async ({ email, schoolId }: { email: string; schoolId: string }) => {
+      // Generate a temporary password or use a default one
+      const tempPassword = "temporaryPassword123"; // In a real app, generate a random password
+      console.log('Creating admin with', { email, schoolId, tempPassword });
+      
+      // Create user in auth system with admin role
+      const { error } = await supabase.auth.signUp({
+        email,
+        password: tempPassword,
+        options: {
+          data: {
+            role: 'admin',
+            school_id: schoolId
+          }
+        }
+      });
+      
+      if (error) throw error;
+      
+      return { id: 'new-admin-id', email, createdAt: new Date().toISOString() };
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admins'] });

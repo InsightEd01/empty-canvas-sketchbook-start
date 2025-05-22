@@ -11,7 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Building } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
-import type { School, SchoolFormData } from '@/types/school.types';
+import type { SchoolFormData } from '@/types/school.types';
 
 export function SchoolFormPage() {
   const { id } = useParams<{ id: string }>();

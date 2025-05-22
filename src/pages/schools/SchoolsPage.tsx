@@ -26,26 +26,14 @@ import { ColorPicker } from '../../components/ui/color-picker';
 
 type SchoolRow = Row<School>;
 
-export interface CreateSchoolRequest {
-  name: string;
-  address: string;
-  maxTeachers?: number;
-  maxStudents?: number;
-  primaryColor?: string;
-  secondaryColor?: string;
-}
-
-export interface UpdateSchoolRequest extends CreateSchoolRequest {
-  id: string;
-}
-
 interface FormData {
   name: string;
-  address: string;
-  primaryColor: string;
-  secondaryColor: string;
-  maxTeachers: number;
-  maxStudents: number;
+  domain: string;
+  address?: string;
+  primaryColor?: string;
+  secondaryColor?: string;
+  maxTeachers?: number;
+  maxStudents?: number;
 }
 
 export function SchoolsPage() {
@@ -60,6 +48,7 @@ export function SchoolsPage() {
   // Form states
   const [formData, setFormData] = useState<FormData>({
     name: '',
+    domain: '',
     address: '',
     primaryColor: '#4f46e5',
     secondaryColor: '#818cf8',
@@ -73,7 +62,17 @@ export function SchoolsPage() {
   });
 
   const createSchoolMutation = useMutation({
-    mutationFn: createSchool,
+    mutationFn: (data: FormData) => {
+      return createSchool({
+        name: data.name,
+        domain: data.domain,
+        address: data.address,
+        primaryColor: data.primaryColor,
+        secondaryColor: data.secondaryColor,
+        maxTeachers: data.maxTeachers,
+        maxStudents: data.maxStudents,
+      });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['schools'] });
       setOpen(false);
@@ -94,9 +93,9 @@ export function SchoolsPage() {
 
   const updateSchoolMutation = useMutation({
     mutationFn: (school: School) => updateSchool(school.id, {
-      id: school.id,
       name: school.name,
-      address: school.address || '',
+      domain: school.domain,
+      address: school.address,
       maxTeachers: school.maxTeachers,
       maxStudents: school.maxStudents,
       primaryColor: school.primaryColor,
@@ -126,6 +125,7 @@ export function SchoolsPage() {
   const resetForm = () => {
     setFormData({
       name: '',
+      domain: '',
       address: '',
       primaryColor: '#4f46e5',
       secondaryColor: '#818cf8',
@@ -188,6 +188,7 @@ export function SchoolsPage() {
                 setSelectedSchool(school);
                 setFormData({
                   name: school.name,
+                  domain: school.domain,
                   address: school.address || '',
                   primaryColor: school.primaryColor || '#4f46e5',
                   secondaryColor: school.secondaryColor || '#818cf8',
@@ -229,7 +230,7 @@ export function SchoolsPage() {
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <h2 className="text-2xl font-bold tracking-tight">{selectedSchool.name}</h2>
-              <p className="text-muted-foreground">{selectedSchool.address}</p>
+              <p className="text-muted-foreground">{selectedSchool.address || 'No address'}</p>
             </div>
             <div className="flex gap-2">
               <Button variant="outline" onClick={() => setViewMode('list')}>
@@ -398,6 +399,15 @@ export function SchoolsPage() {
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       placeholder="Enter school name"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="domain">Domain</Label>
+                    <Input
+                      id="domain"
+                      value={formData.domain}
+                      onChange={(e) => setFormData({ ...formData, domain: e.target.value })}
+                      placeholder="school.edu"
                     />
                   </div>
                   <div className="space-y-2">
