@@ -14,6 +14,8 @@ import { LoginPage } from '@/pages/auth/LoginPage';
 import { useAuth } from '@/contexts/AuthContext';
 import { LoadingOverlay } from '@/components/ui/loading';
 
+import './App.css';
+
 const queryClient = new QueryClient();
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {

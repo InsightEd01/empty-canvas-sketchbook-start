@@ -35,10 +35,10 @@ export function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-6">
-      <Card className="w-full max-w-md shadow-lg">
-        <CardHeader className="space-y-2 text-center">
+      <Card className="w-full max-w-md shadow-lg border border-border">
+        <CardHeader className="space-y-2 text-center pb-6">
           <CardTitle className="text-3xl font-bold tracking-tight">Master Admin Portal</CardTitle>
-          <CardDescription className="text-muted-foreground">
+          <CardDescription className="text-muted-foreground text-base">
             Enter your credentials to access the master admin dashboard
           </CardDescription>
         </CardHeader>
@@ -52,7 +52,7 @@ export function LoginPage() {
                 placeholder="name@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full"
+                className="w-full h-10"
                 required
               />
             </div>
@@ -64,13 +64,13 @@ export function LoginPage() {
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full"
+                className="w-full h-10"
                 required
               />
             </div>
             <Button
               type="submit"
-              className="w-full bg-primary hover:bg-primary/90"
+              className="w-full bg-primary hover:bg-primary/90 h-11 text-base font-medium"
               disabled={isLoading}
             >
               {isLoading ? 'Signing in...' : 'Sign In'}
