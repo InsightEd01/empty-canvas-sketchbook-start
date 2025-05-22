@@ -1,3 +1,4 @@
+
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { getSchoolById } from '@/services/masterAdminService';
@@ -12,7 +13,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { ColorPicker } from '@/components/ui/color-picker';
-import { School } from '@/types/school.types';
+import type { School } from '@/types/school.types';
 
 const settingsFormSchema = z.object({
   name: z.string().min(2, "School name must be at least 2 characters"),
