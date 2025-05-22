@@ -36,7 +36,8 @@ export function SchoolSettingsPage() {
 
   const { data: school, isLoading } = useQuery({
     queryKey: ['school', id],
-    queryFn: () => getSchoolById(id!)
+    queryFn: () => getSchoolById(id!) as Promise<School>,
+    enabled: !!id
   });
 
   const form = useForm<SettingsFormValues>({

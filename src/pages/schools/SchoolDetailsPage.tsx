@@ -23,9 +23,9 @@ export function SchoolDetailsPage() {
   const { id } = useParams<{ id: string }>();
   const { setSelectedSchool } = useSchool();
 
-  const { data: school, isLoading } = useQuery<School, Error>({
+  const { data: school, isLoading } = useQuery({
     queryKey: ['school', id],
-    queryFn: () => getSchoolById(id!),
+    queryFn: () => getSchoolById(id!) as Promise<School>,
     enabled: !!id
   });
 

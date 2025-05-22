@@ -1,15 +1,5 @@
 import { supabase } from '@/lib/supabase';
-
-export interface School {
-  id: string;
-  name: string;
-  domain?: string;
-  settings: {
-    allowStudentUpload: boolean;
-  };
-  totalStudents?: number;
-  createdAt: string;
-}
+import type { School } from '@/types/school.types';
 
 export interface SchoolAdmin {
   id: string;
@@ -60,7 +50,7 @@ export async function getSchoolById(id: string): Promise<School> {
   return data;
 }
 
-export async function createSchool(school: Omit<School, 'id' | 'createdAt'>): Promise<School> {
+export async function createSchool(school: Omit<School, 'id' | 'created_at' | 'created_by'>): Promise<School> {
   const { data, error } = await supabase
     .from('schools')
     .insert([school])
