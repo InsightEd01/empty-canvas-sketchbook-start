@@ -1,4 +1,4 @@
-import * as React from 'react';
+
 import { ChromePicker } from 'react-color';
 import { Button } from './button';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';

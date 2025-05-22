@@ -1,8 +1,9 @@
+
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { getSchoolById } from '@/services/masterAdminService';
 import { useSchoolManagement } from '@/hooks/use-school-management';
-import { Loading } from '@/components/ui/loading';
+import { LoadingSpinner } from '@/components/ui/loading';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -11,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { ColorPicker } from '@/components/ui/color-picker';
 
 const settingsFormSchema = z.object({
   name: z.string().min(2, "School name must be at least 2 characters"),
@@ -54,7 +56,7 @@ export function SchoolSettingsPage() {
   });
 
   if (isLoading || !school) {
-    return <Loading text="Loading school settings..." />;
+    return <LoadingSpinner size="lg" />;
   }
 
   const onSubmit = async (data: SettingsFormValues) => {
@@ -105,19 +107,19 @@ export function SchoolSettingsPage() {
           <CardContent className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="primary-color">Primary Color</Label>
-              <Input
-                id="primary-color"
-                type="color"
-                {...form.register("theme.primary")}
+              <ColorPicker
+                value={form.watch("theme.primary")}
+                onChange={(color: string) => form.setValue("theme.primary", color)}
+                className="w-full"
               />
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="secondary-color">Secondary Color</Label>
-              <Input
-                id="secondary-color"
-                type="color"
-                {...form.register("theme.secondary")}
+              <ColorPicker
+                value={form.watch("theme.secondary")}
+                onChange={(color: string) => form.setValue("theme.secondary", color)}
+                className="w-full"
               />
             </div>
           </CardContent>
@@ -140,7 +142,7 @@ export function SchoolSettingsPage() {
               </div>
               <Switch
                 checked={form.watch("settings.allowTeacherRegistration")}
-                onCheckedChange={(checked) => 
+                onCheckedChange={(checked: boolean) => 
                   form.setValue("settings.allowTeacherRegistration", checked)
                 }
               />
@@ -155,7 +157,7 @@ export function SchoolSettingsPage() {
               </div>
               <Switch
                 checked={form.watch("settings.allowStudentUpload")}
-                onCheckedChange={(checked) => 
+                onCheckedChange={(checked: boolean) => 
                   form.setValue("settings.allowStudentUpload", checked)
                 }
               />

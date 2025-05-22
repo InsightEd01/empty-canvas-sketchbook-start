@@ -1,14 +1,13 @@
+
 import { useState } from 'react';
-import DashboardLayout from '../../components/layout/DashboardLayout';
-import { Button } from '../../components/ui/button';
+import { DashboardLayout } from '../../components/layout/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { Switch } from '../../components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import { Slider } from '../../components/ui/slider';
-import { toast } from '../../components/ui/use-toast';
-import { Building2, Shield, Gauge, Globe } from 'lucide-react';
+import { Building2, Shield, Gauge } from 'lucide-react';
+import { toast } from '@/components/ui/toast';
 
 export const MasterSettingsPage = () => {
   // System settings state
@@ -107,7 +106,7 @@ export const MasterSettingsPage = () => {
                     </Label>
                     <Switch
                       checked={systemSettings.multiTenancyEnabled}
-                      onCheckedChange={(checked) => 
+                      onCheckedChange={(checked: boolean) => 
                         handleSystemSettingChange('multiTenancyEnabled', checked)
                       }
                     />
@@ -144,7 +143,7 @@ export const MasterSettingsPage = () => {
                     </Label>
                     <Switch
                       checked={systemSettings.enableAutomaticBackups}
-                      onCheckedChange={(checked) => 
+                      onCheckedChange={(checked: boolean) => 
                         handleSystemSettingChange('enableAutomaticBackups', checked)
                       }
                     />
@@ -184,7 +183,7 @@ export const MasterSettingsPage = () => {
                     </Label>
                     <Switch
                       checked={securitySettings.requireMfa}
-                      onCheckedChange={(checked) => 
+                      onCheckedChange={(checked: boolean) => 
                         handleSecuritySettingChange('requireMfa', checked)
                       }
                     />
@@ -210,7 +209,7 @@ export const MasterSettingsPage = () => {
                     </Label>
                     <Switch
                       checked={securitySettings.auditLogging}
-                      onCheckedChange={(checked) => 
+                      onCheckedChange={(checked: boolean) => 
                         handleSecuritySettingChange('auditLogging', checked)
                       }
                     />
@@ -272,7 +271,7 @@ export const MasterSettingsPage = () => {
                     </Label>
                     <Switch
                       checked={performanceSettings.loadBalancingEnabled}
-                      onCheckedChange={(checked) => 
+                      onCheckedChange={(checked: boolean) => 
                         handlePerformanceSettingChange('loadBalancingEnabled', checked)
                       }
                     />

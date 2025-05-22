@@ -1,5 +1,6 @@
+
 import { supabase } from '@/lib/supabase';
-import { School, CreateSchoolRequest, UpdateSchoolRequest } from '@/types/school.types';
+import type { School, CreateSchoolRequest, UpdateSchoolRequest } from '@/types/school.types';
 
 export async function getSchools(): Promise<School[]> {
   const { data, error } = await supabase

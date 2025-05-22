@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { useQuery } from '@tanstack/react-query';
@@ -28,7 +29,7 @@ export function MasterAnalytics() {
 
   const stats = {
     totalSchools: schools?.length || 0,
-    activeSchools: schools?.filter(s => s.settings.allowStudentUpload).length || 0,
+    activeSchools: schools?.filter(s => s.settings?.allowStudentUpload).length || 0,
     newSchoolsThisMonth: Math.floor(Math.random() * 10), // TODO: Replace with actual data
     totalStudents: schools?.reduce((sum, school) => sum + (school.totalStudents || 0), 0) || 0
   };
@@ -109,7 +110,7 @@ export function MasterAnalytics() {
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  label={({ name, percent }: { name: string; percent: number }) => `${name} ${(percent * 100).toFixed(0)}%`}
                   outerRadius={100}
                   fill="#8884d8"
                   dataKey="value"
